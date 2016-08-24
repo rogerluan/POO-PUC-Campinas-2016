@@ -1,45 +1,24 @@
 import java.util.Scanner;
+import java.util.Vector;
 
 public class StaffTest {
 
+	/*
+	 * Exercise 02
+	 */
 	public static void main(String[] args) {
-		Staff staff1 = receiveStaff();
-		Staff staff2 = receiveStaff();
-		
-		System.out.println("Salário anual do primeiro funcionário: " + staff1.getAnualSalary());
-		System.out.println("Salário anual do segundo funcionário: " + staff2.getAnualSalary());
-		
-		System.out.println("Aumento percentual do salário dos funcionários: ");
 		Scanner input = new Scanner(System.in);
+		String operator = new String("s");
 		
-		double percentage = input.nextDouble();
+		Vector<Staff> staffList = new Vector<Staff>();
+		while (operator.equals("s")) {
+			staffList.add(Helper.receiveStaff());
+			
+			System.out.println("Deseja adicionar mais funcionários?(s/n): ");
+			operator = input.nextLine();
+		}
 		
-		staff1.raiseSalaryByPercentage(percentage);
-		staff2.raiseSalaryByPercentage(percentage);
-		
-		System.out.println("Novo salário anual do primeiro funcionário: " + staff1.getAnualSalary());
-		System.out.println("Novo salário anual do segundo funcionário: " + staff2.getAnualSalary());
-		
+		Helper.printMonthlySalary(staffList);
 		input.close();
 	}
-	
-	private static Staff receiveStaff() {
-		System.out.println("Digite o primeiro nome: ");
-		
-		Scanner input = new Scanner(System.in);
-		//variable leak here, since we're not closing Scanner.
-		//it cannot be closed since it's inside a static method.
-		
-		String firstName = input.nextLine(); 
-//		input.nextLine(); //needed to read the next line.
-		
-		System.out.println("Sobrenome: ");
-		String lastName = input.nextLine();
-		
-		System.out.println("Salário mensal: ");
-		double salary = input.nextDouble();
-
-		return new Staff(firstName, lastName, salary);
-	}
-
 }

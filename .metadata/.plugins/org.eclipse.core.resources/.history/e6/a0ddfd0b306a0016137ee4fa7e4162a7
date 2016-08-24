@@ -56,10 +56,10 @@ public class Staff {
 		return this.getHourlyRate()*this.getHoursPerWeek();
 	}
 	public double getAnualSalary() {
-		return 52*this.getWeeklySalary();
+		return this.getWeeklySalary()*52;
 	}
 	public double getMonthlySalary() {
-		return 4*this.getWeeklySalary();
+		return this.getWeeklySalary()*4;
 	}
 	public void raiseSalaryByPercentage(double percentage) {
 		percentage = 1 + (percentage/100);	
