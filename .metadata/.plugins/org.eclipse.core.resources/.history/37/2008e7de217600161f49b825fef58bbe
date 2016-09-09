@@ -1,0 +1,11 @@
+
+public class Exercise4 {
+
+	public static void main(String[] args) {
+		System.out.println("Number      Squared     Cubed");
+		for (int i = 1 ; i <= 10 ; i++) {
+			System.out.printf("\n%d\t\t%l\t\t%l", i, Math.pow(i, 2), Math.pow(i, 3));
+		}
+	}
+
+}
