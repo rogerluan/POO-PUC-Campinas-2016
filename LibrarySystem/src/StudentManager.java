@@ -2,6 +2,11 @@ import java.util.ArrayList;
 
 public class StudentManager {
 	private ArrayList<Student> students;
+	
+	public StudentManager() {
+		super();
+		students = new ArrayList<Student>();
+	}
 
 	/*
 	 * Getters

@@ -14,6 +14,7 @@ public class Student {
 		super();
 		setName(name);;
 		setRA(RA);
+		setCurrentBooks(new ArrayList<Book>());
 	}
 	
 	/*
@@ -36,7 +37,7 @@ public class Student {
 		this.name = name.trim();
 	}
 	public void setRA(String RA) {
-		RA = RA.trim();
+		this.RA = RA.trim();
 	}
 	public void setCurrentBooks(ArrayList<Book> currentBooks) {
 		this.currentBooks = currentBooks;
@@ -48,10 +49,14 @@ public class Student {
 
 	@Override
 	public String toString() {
-		String returnString = new String("Student: " + name + ", RA = " + RA + "\nCurrent Books:\n");
+		String returnString = new String("Student: " + name + ", RA = " + RA + "\nCurrent Books: ");
 		
-		for (Book book : currentBooks) {
-			returnString = returnString + " - " + book.getTitle() + "\n";
+		if (currentBooks.size() > 0) {
+			for (Book book : currentBooks) {
+				returnString = returnString + "\n - " + book.getTitle();
+			}	
+		} else {
+			returnString = returnString + "none.";
 		}
 		
 		return returnString;

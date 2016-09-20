@@ -18,7 +18,7 @@ public class Book {
 		setIsTaken(false);
 		setRegisterDate(new Date());
 		setAllowedRentalPeriod(7);
-		setNumberOfCopies(numberOfCopies);		
+		setNumberOfCopies(numberOfCopies);
 	}
 
 	/*
@@ -73,6 +73,11 @@ public class Book {
 		this.numberOfCopies = numberOfCopies;
 	}
 	
+	@Override
+	public String toString() {
+		return "Book: " + numberOfCopies + " x " + title + ", register date:  " + registerDate;
+	}
+
 	/*
 	 * Custom Methods
 	 */

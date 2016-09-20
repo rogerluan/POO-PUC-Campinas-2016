@@ -22,7 +22,6 @@ public class LibrarySystem {
 		studentManager = new StudentManager();
 		showWelcomeMessage();
 		showMenu();
-		input = new Scanner(System.in);
 	}
 	
 	public void showWelcomeMessage() {
@@ -41,6 +40,7 @@ public class LibrarySystem {
 		System.out.println("7 - List overdue books");
 		System.out.println("8 - List all books registered");
 		System.out.println("9 - List all students registered");
+		System.out.println("10 - Quit");
 		readOption();
 	}
 	
@@ -55,6 +55,9 @@ public class LibrarySystem {
 				System.out.println("Invalid action, please choose an action number between 1 and 9.");
 				readOption();
 			}
+		} else {
+			input = new Scanner(System.in);
+			readOption();
 		}
 	}
 	
@@ -99,6 +102,7 @@ public class LibrarySystem {
 
 	private void actionRegisterNewStudent() {
 		if (studentManager != null) {
+			input = new Scanner(System.in);
 			System.out.println("Student name: ");
 			String name = input.nextLine();
 			System.out.println("Student RA: ");
@@ -109,8 +113,8 @@ public class LibrarySystem {
 			} else {
 				System.out.println("The given RA is already registered in our records.");
 			}
-			
 		}
+		showMenu();
 	}
 
 	private void actionRegisterNewBook() {
@@ -123,6 +127,7 @@ public class LibrarySystem {
 			bookManager.addBook(new Book(title, numberOfCopies));
 			System.out.println(title.toUpperCase() + " was successfully registered.");
 		}
+		showMenu();
 	}
 
 	private void actionLendBooks() {
@@ -149,12 +154,14 @@ public class LibrarySystem {
 		if (bookManager != null) {
 			bookManager.listAllBooks();
 		}
+		showMenu();
 	}
 	
 	private void actionListStudents() {
 		if (studentManager != null) {
 			studentManager.listAllStudents();
 		}
+		showMenu();
 	}
 	
 	private void actionQuit() {
