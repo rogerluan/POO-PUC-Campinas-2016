@@ -109,9 +109,9 @@ public class LibrarySystem {
 			String RA = input.nextLine();
 			
 			if (studentManager.addStudent(new Student(name, RA))) {
-				System.out.println(name.toUpperCase() + " was successfully registered.\n");
+				System.out.println(name.toUpperCase() + " was successfully registered.");
 			} else {
-				System.out.println("The given RA is already registered in our records.\n");
+				System.out.println("The given RA is already registered in our records.");
 			}
 		}
 		showMenu();
@@ -119,14 +119,13 @@ public class LibrarySystem {
 
 	private void actionRegisterNewBook() {
 		if (bookManager != null) {
-			input = new Scanner(System.in);
 			System.out.println("Book title: ");
 			String title = input.nextLine();
 			System.out.println("Number of copies: ");
 			Integer numberOfCopies = input.nextInt();
 			
 			bookManager.addBook(new Book(title, numberOfCopies));
-			System.out.println(title.toUpperCase() + " was successfully registered.\n");
+			System.out.println(title.toUpperCase() + " was successfully registered.");
 		}
 		showMenu();
 	}
@@ -154,7 +153,6 @@ public class LibrarySystem {
 	private void actionListBooks() {
 		if (bookManager != null) {
 			bookManager.listAllBooks();
-			System.out.println();
 		}
 		showMenu();
 	}
@@ -162,7 +160,6 @@ public class LibrarySystem {
 	private void actionListStudents() {
 		if (studentManager != null) {
 			studentManager.listAllStudents();
-			System.out.println();
 		}
 		showMenu();
 	}
