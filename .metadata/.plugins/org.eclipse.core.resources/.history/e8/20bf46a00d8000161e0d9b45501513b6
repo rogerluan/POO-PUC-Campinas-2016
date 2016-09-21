@@ -154,7 +154,7 @@ public class Student {
 	}
 	
 	public Boolean canBorrowBook() {
-		//TODO: verify if the student has any overdue book.
+		//to-do: verify if the student has any overdue book.
 		if (currentBooks.size() >= 3) {
 			return false;
 		}

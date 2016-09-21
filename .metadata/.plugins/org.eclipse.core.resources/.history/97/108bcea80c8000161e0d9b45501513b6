@@ -128,7 +128,7 @@ public class LibrarySystem {
 			System.out.println("Number of copies: ");
 			Integer numberOfCopies = input.nextInt();
 			
-			bookManager.addBook(new LibraryBook(title, numberOfCopies));
+			bookManager.addBook(new Book(title, numberOfCopies));
 			System.out.println(title.toUpperCase() + " was successfully registered.\n");
 		}
 		showMenu();
@@ -147,7 +147,7 @@ public class LibrarySystem {
 						if (requestingStudent.canBorrowBook()) {
 							System.out.println("Title of the book to be borrowed: ");
 							String title = input.nextLine();
-							LibraryBook choosenBook = bookManager.chooseBookByTitle(title, input);
+							Book choosenBook = bookManager.chooseBookByTitle(title, input);
 							System.out.println(choosenBook.toFullString());
 							if (choosenBook.countAvailableCopies() > 0) {
 								if (requestingStudent.rentBook(choosenBook)) {
@@ -188,13 +188,13 @@ public class LibrarySystem {
 						if (requestingStudent.getCurrentBooks().size() > 0) {
 							System.out.println("Title of the book that is being returned: ");
 							String title = input.nextLine();
-							StudentBook returningBook = requestingStudent.chooseBookByTitle(title, input);
+							Book returningBook = requestingStudent.chooseBookByTitle(title, input);
 
 							if (returningBook != null) {
 								requestingStudent.returnBook(returningBook);
-								LibraryBook bookReference = bookManager.getBookByTitle(returningBook.getTitle());
+								Book bookReference = bookManager.getBookByTitle(returningBook.getTitle());
 								if (bookReference != null) {
-									bookReference.decrementCopiesTakenCount();
+									bookReference.decrementCopiesTaken();
 									System.out.println(requestingStudent.getName() + " successfully returned the book " + returningBook.getTitle());
 								} else {
 									System.out.println("Error: couldn't find a reference of the returning book in the Library.");
@@ -224,7 +224,7 @@ public class LibrarySystem {
 				input = new Scanner(System.in);
 				System.out.println("Title of the book: ");
 				String title = input.nextLine();
-				LibraryBook choosenBook = bookManager.chooseBookByTitle(title, input); 
+				Book choosenBook = bookManager.chooseBookByTitle(title, input); 
 				if (choosenBook != null) {
 					System.out.println(choosenBook.toFullString());
 				} else {
@@ -265,24 +265,19 @@ public class LibrarySystem {
 	}
 
 	private void actionListOverdue() {
-		
-		String noOverdueBooksMessage = "There're no overdue books.\n";
-		
 		if (bookManager != null && studentManager != null) {
 			ArrayList<Student> studentsList = studentManager.getStudents();
 			if (studentsList.size() > 0) {
 				for (Student student : studentsList) {
-					ArrayList<StudentBook> booksList = student.getCurrentBooks();
-					for (StudentBook book : booksList) {
+					ArrayList<Book> booksList = student.getCurrentBooks();
+					for (Book book : booksList) {
 						if (book.isOverdue()) {
-							noOverdueBooksMessage = "";
-							System.out.println(student.getName().toUpperCase() + " has over due books: \n -> " + book.getTitle() + ", Due date: " + book.getFormattedDueDate());
+							System.out.println(student.getName().toUpperCase() + " has over due books: \n -> " + book.getTitle() + ", Due date: " + book.getFormattedReturnDateLimit());
 						}
 					}
 				}
-				System.out.println(noOverdueBooksMessage);
 			} else {
-				System.out.println("No student records found.\n");
+				System.out.println("No student records found.");
 			}
 		}
 		showMenu();

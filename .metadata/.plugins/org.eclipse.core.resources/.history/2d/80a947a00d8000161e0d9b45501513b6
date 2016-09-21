@@ -265,9 +265,6 @@ public class LibrarySystem {
 	}
 
 	private void actionListOverdue() {
-		
-		String noOverdueBooksMessage = "There're no overdue books.\n";
-		
 		if (bookManager != null && studentManager != null) {
 			ArrayList<Student> studentsList = studentManager.getStudents();
 			if (studentsList.size() > 0) {
@@ -275,14 +272,12 @@ public class LibrarySystem {
 					ArrayList<StudentBook> booksList = student.getCurrentBooks();
 					for (StudentBook book : booksList) {
 						if (book.isOverdue()) {
-							noOverdueBooksMessage = "";
 							System.out.println(student.getName().toUpperCase() + " has over due books: \n -> " + book.getTitle() + ", Due date: " + book.getFormattedDueDate());
 						}
 					}
 				}
-				System.out.println(noOverdueBooksMessage);
 			} else {
-				System.out.println("No student records found.\n");
+				System.out.println("No student records found.");
 			}
 		}
 		showMenu();

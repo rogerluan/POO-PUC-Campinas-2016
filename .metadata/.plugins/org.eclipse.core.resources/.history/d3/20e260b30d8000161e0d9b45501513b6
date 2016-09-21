@@ -280,11 +280,11 @@ public class LibrarySystem {
 						}
 					}
 				}
-				System.out.println(noOverdueBooksMessage);
 			} else {
-				System.out.println("No student records found.\n");
+				System.out.println("No student records found.");
 			}
 		}
+		System.out.println(noOverdueBooksMessage);
 		showMenu();
 	}
 

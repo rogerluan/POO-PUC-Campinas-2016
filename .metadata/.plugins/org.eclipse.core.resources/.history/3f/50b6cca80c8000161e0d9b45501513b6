@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Student {
 	private String name;
 	private String RA;
-	private ArrayList<StudentBook> currentBooks;
+	private ArrayList<Book> currentBooks;
 	
 	/**
 	 * Constructor 	method
@@ -17,7 +17,7 @@ public class Student {
 		super();
 		setName(name);;
 		setRA(RA);
-		setCurrentBooks(new ArrayList<StudentBook>());
+		setCurrentBooks(new ArrayList<Book>());
 	}
 	
 	/*
@@ -29,7 +29,7 @@ public class Student {
 	public String getRA() {
 		return RA;
 	}
-	public ArrayList<StudentBook> getCurrentBooks() {
+	public ArrayList<Book> getCurrentBooks() {
 		return currentBooks;
 	}
 
@@ -42,7 +42,7 @@ public class Student {
 	public void setRA(String RA) {
 		this.RA = RA.trim();
 	}
-	public void setCurrentBooks(ArrayList<StudentBook> currentBooks) {
+	public void setCurrentBooks(ArrayList<Book> currentBooks) {
 		this.currentBooks = currentBooks;
 	}
 	
@@ -59,8 +59,8 @@ public class Student {
 		String returnString = new String(getName().toUpperCase() + ", RA = " + getRA() + "\nCurrent Books: ");
 		
 		if (currentBooks.size() > 0) {
-			for (StudentBook book : currentBooks) {
-				returnString = returnString + "\n - " + book.getTitle() + " - Due date: " + book.getFormattedDueDate();
+			for (Book book : currentBooks) {
+				returnString = returnString + "\n - " + book.getTitle() + " - Due date: " + book.getFormattedReturnDateLimit();
 			}	
 		} else {
 			returnString = returnString + "none.";
@@ -78,15 +78,16 @@ public class Student {
 	 * @param book 	The book that the student is renting.
 	 * @return true if the operation was successful, else false.
 	 */
-	public Boolean rentBook(LibraryBook book) {
+	public Boolean rentBook(Book book) {
 		if (currentBooks.size() >= 3) {
 			return false;
 		} else {
-			book.incrementCopiesTakenCount();
-			StudentBook bookBeingBorrowed = new StudentBook(book.getTitle(), book.getAllowedRentalPeriod());
+			book.incrementCopiesTaken();
+			Book bookBeingBorrowed = book.copy();
+			bookBeingBorrowed.borrow();
 			currentBooks.add(bookBeingBorrowed);
 			
-			System.out.println(name.toUpperCase() + " must return this book by " + bookBeingBorrowed.getFormattedDueDate());
+			System.out.println(name.toUpperCase() + " must return this book by " + bookBeingBorrowed.getFormattedReturnDateLimit());
 			return true;
 		}
 	}
@@ -96,7 +97,7 @@ public class Student {
 	 * @param book	The book that is being returned.
 	 * @return true if the operation was successful, else false.
 	 */
-	public Boolean returnBook(StudentBook book) {
+	public Boolean returnBook(Book book) {
 		if (currentBooks.contains(book)) {
 			if (book.isOverdue()) {
 				System.out.println(name.toUpperCase() + " is returning the book after the return date limit.");
@@ -109,9 +110,9 @@ public class Student {
 		}
 	}
 	
-	private ArrayList<StudentBook> getBooksByTitle(String title) {
-		ArrayList<StudentBook> bookList = new ArrayList<StudentBook>();
-		for (StudentBook book : currentBooks) {
+	private ArrayList<Book> getBooksByTitle(String title) {
+		ArrayList<Book> bookList = new ArrayList<Book>();
+		for (Book book : currentBooks) {
 			if (book.getTitle().contains(title)) {
 				bookList.add(book);
 			}
@@ -119,15 +120,15 @@ public class Student {
 		return bookList;
 	}
 	
-	public StudentBook chooseBookByTitle(String title, Scanner input) {
+	public Book chooseBookByTitle(String title, Scanner input) {
 		
-		ArrayList<StudentBook> possibleBooks = getBooksByTitle(title);
-		StudentBook choosenBook = null;
+		ArrayList<Book> possibleBooks = getBooksByTitle(title);
+		Book choosenBook = null;
 		
 		if (possibleBooks.size() > 0) {
 			if (possibleBooks.size() > 1) {
 				System.out.println("The search brought " + possibleBooks.size() + " results.");
-				for (StudentBook book : possibleBooks) {
+				for (Book book : possibleBooks) {
 					System.out.println("Book #" + (possibleBooks.indexOf(book)+1) + ": " + book.toString());
 				}
 				System.out.println("Type the index of the book that you want to return, or any other key if you want to return to the main menu.");
@@ -154,7 +155,7 @@ public class Student {
 	}
 	
 	public Boolean canBorrowBook() {
-		//TODO: verify if the student has any overdue book.
+		//to-do: verify if the student has any overdue book.
 		if (currentBooks.size() >= 3) {
 			return false;
 		}
