@@ -40,7 +40,7 @@ public class BookManager {
 				System.out.println(book.toString());
 			}
 		} else {
-			System.out.println("There're no books registered.");
+			System.out.println("There're no books registered.\n");
 		}
 	}
 	

@@ -100,11 +100,12 @@ public class Book {
 	}
 
 	public void setAllowedRentalPeriod(Integer allowedRentalPeriod) {
-		if (allowedRentalPeriod > 0) {
-			this.allowedRentalPeriod = allowedRentalPeriod;
-		} else {
-			this.allowedRentalPeriod = 7; // default value;
-		}
+//		if (allowedRentalPeriod > 0) {
+//			this.allowedRentalPeriod = allowedRentalPeriod;
+//		} else {
+//			this.allowedRentalPeriod = 7; // default value;
+//		}
+		this.allowedRentalPeriod = -1;
 	}
 
 	public void setTotalNumberOfCopies(Integer totalNumberOfCopies) {

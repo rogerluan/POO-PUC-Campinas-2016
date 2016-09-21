@@ -177,43 +177,35 @@ public class LibrarySystem {
 
 	private void actionReturnBooks() {
 		if (studentManager != null && bookManager != null) {
-			if (studentManager.getStudents().size() > 0) {
-				if (bookManager.getBooks().size() > 0) {
-					input = new Scanner(System.in);
-					System.out.println("Type the RA of the student that is returning the book: ");
-					String requestingRA = input.nextLine();
-
-					Student requestingStudent = studentManager.getStudentByRA(requestingRA);
-					if (requestingStudent != null) {
-						if (requestingStudent.getCurrentBooks().size() > 0) {
-							System.out.println("Title of the book that is being returned: ");
-							String title = input.nextLine();
-							Book returningBook = requestingStudent.chooseBookByTitle(title, input);
-
-							if (returningBook != null) {
-								requestingStudent.returnBook(returningBook);
-								Book bookReference = bookManager.getBookByTitle(returningBook.getTitle());
-								if (bookReference != null) {
-									bookReference.decrementCopiesTaken();
-									System.out.println(requestingStudent.getName() + " successfully returned the book " + returningBook.getTitle());
-								} else {
-									System.out.println("Error: couldn't find a reference of the returning book in the Library.");
-								}
-							} else {
-								System.out.println("Operation aborted, returning back to the main menu.\n");
-							}
+			input = new Scanner(System.in);
+			System.out.println("Type the RA of the student that is returning the book: ");
+			String requestingRA = input.nextLine();
+			
+			Student requestingStudent = studentManager.getStudentByRA(requestingRA);
+			if (requestingStudent != null) {
+				if (requestingStudent.getCurrentBooks().size() > 0) {
+					System.out.println("Title of the book that is being returned: ");
+					String title = input.nextLine();
+					Book returningBook = requestingStudent.chooseBookByTitle(title, input);
+					
+					if (returningBook != null) {
+						requestingStudent.returnBook(returningBook);
+						Book bookReference = bookManager.getBookByTitle(returningBook.getTitle());
+						if (bookReference != null) {
+							bookReference.decrementCopiesTaken();
+							System.out.println(requestingStudent.getName() + " successfully returned the book " + returningBook.getTitle());
 						} else {
-							System.out.println("This student doesn't have any books in loan.\n");
+							System.out.println("Error: couldn't find a reference of the returning book in the Library.");
 						}
 					} else {
-						System.out.println("We couldn't find a student with the given RA.\n");
+						System.out.println("Operation aborted, returning back to the main menu.\n");
 					}
 				} else {
-					System.out.println("No book records found.");
+					System.out.println("This student doesn't have any books in loan.\n");
 				}
 			} else {
-				System.out.println("No student records found.");
-			}
+				System.out.println("We couldn't find a student with the given RA.\n");
+			}	
 		}
 		showMenu();
 	}
@@ -265,22 +257,7 @@ public class LibrarySystem {
 	}
 
 	private void actionListOverdue() {
-		if (bookManager != null && studentManager != null) {
-			ArrayList<Student> studentsList = studentManager.getStudents();
-			if (studentsList.size() > 0) {
-				for (Student student : studentsList) {
-					ArrayList<Book> booksList = student.getCurrentBooks();
-					for (Book book : booksList) {
-						if (book.isOverdue()) {
-							System.out.println(student.getName().toUpperCase() + " has over due books: \n -> " + book.getTitle() + ", Due date: " + book.getFormattedReturnDateLimit());
-						}
-					}
-				}
-			} else {
-				System.out.println("No student records found.");
-			}
-		}
-		showMenu();
+
 	}
 
 	private void actionListBooks() {

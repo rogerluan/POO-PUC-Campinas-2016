@@ -42,12 +42,8 @@ public class StudentManager {
 	}	
 	
 	public void listAllStudents() {
-		if (students.size() > 0) {
-			for (Student student : students) {
-				System.out.println(student.toString());
-			}	
-		} else {
-			System.out.println("There're no students registered.");
+		for (Student student : students) {
+			System.out.println(student.toString());
 		}
 	}
 	
@@ -73,7 +69,7 @@ public class StudentManager {
 	public Student chooseStudentByName(String name, Scanner input) {
 		ArrayList<Student> possibleStudents = getStudentsByName(name);
 		
-		Student choosenStudent = null;
+		Book choosenStudent = null;
 		
 		if (possibleStudents.size() > 0) {
 			if (possibleStudents.size() > 1) {

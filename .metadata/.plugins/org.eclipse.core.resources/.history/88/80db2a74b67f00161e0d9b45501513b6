@@ -154,11 +154,4 @@ public class Book {
 
 		setReturnDateLimit(calendarHelper.getTime());
 	}
-	
-	public Boolean isOverdue() {
-		if (new Date().after(getReturnDateLimit())) {
-			return true;
-		}
-		return false;
-	}
 }

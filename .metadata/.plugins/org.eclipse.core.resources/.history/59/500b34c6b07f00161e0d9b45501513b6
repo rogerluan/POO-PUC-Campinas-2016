@@ -42,12 +42,8 @@ public class StudentManager {
 	}	
 	
 	public void listAllStudents() {
-		if (students.size() > 0) {
-			for (Student student : students) {
-				System.out.println(student.toString());
-			}	
-		} else {
-			System.out.println("There're no students registered.");
+		for (Student student : students) {
+			System.out.println(student.toString());
 		}
 	}
 	
@@ -73,15 +69,15 @@ public class StudentManager {
 	public Student chooseStudentByName(String name, Scanner input) {
 		ArrayList<Student> possibleStudents = getStudentsByName(name);
 		
-		Student choosenStudent = null;
+		Book choosenStudent = null;
 		
 		if (possibleStudents.size() > 0) {
 			if (possibleStudents.size() > 1) {
 				System.out.println("The search brought " + possibleStudents.size() + " results.");
-				for (Student student : possibleStudents) {
-					System.out.println("Student #" + (possibleStudents.indexOf(student)+1) + ": " + student.toString());
+				for (Book book : possibleStudents) {
+					System.out.println("Book #" + (possibleStudents.indexOf(book)+1) + ": " + book.toString());
 				}
-				System.out.println("Type the index of the student that you want to see more detailed information, or any other key if you want to return to the main menu.");
+				System.out.println("Type the index of the book that you want to see more detailed information, or any other key if you want to return to the main menu.");
 				
 				try {
 					input = new Scanner(System.in);

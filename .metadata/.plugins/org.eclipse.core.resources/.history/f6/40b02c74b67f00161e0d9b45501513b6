@@ -265,22 +265,7 @@ public class LibrarySystem {
 	}
 
 	private void actionListOverdue() {
-		if (bookManager != null && studentManager != null) {
-			ArrayList<Student> studentsList = studentManager.getStudents();
-			if (studentsList.size() > 0) {
-				for (Student student : studentsList) {
-					ArrayList<Book> booksList = student.getCurrentBooks();
-					for (Book book : booksList) {
-						if (book.isOverdue()) {
-							System.out.println(student.getName().toUpperCase() + " has over due books: \n -> " + book.getTitle() + ", Due date: " + book.getFormattedReturnDateLimit());
-						}
-					}
-				}
-			} else {
-				System.out.println("No student records found.");
-			}
-		}
-		showMenu();
+
 	}
 
 	private void actionListBooks() {

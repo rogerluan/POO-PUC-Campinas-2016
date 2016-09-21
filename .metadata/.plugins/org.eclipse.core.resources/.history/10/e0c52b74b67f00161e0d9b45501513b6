@@ -99,7 +99,7 @@ public class Student {
 	 */
 	public Boolean returnBook(Book book) {
 		if (currentBooks.contains(book)) {
-			if (book.isOverdue()) {
+			if (new Date().after(book.getReturnDateLimit())) {
 				System.out.println(name.toUpperCase() + " is returning the book after the return date limit.");
 			}
 			currentBooks.remove(book);

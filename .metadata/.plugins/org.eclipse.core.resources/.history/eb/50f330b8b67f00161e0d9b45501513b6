@@ -22,7 +22,7 @@ public class Book {
 		super();
 		setTitle(title);
 		setRegisterDate(new Date());
-		setAllowedRentalPeriod(7);
+		setAllowedRentalPeriod(-1);
 		setTotalNumberOfCopies(totalNumberOfCopies);
 		setCopiesTaken(0);
 	}

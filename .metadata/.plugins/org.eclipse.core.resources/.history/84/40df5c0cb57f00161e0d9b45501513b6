@@ -47,7 +47,7 @@ public class StudentManager {
 				System.out.println(student.toString());
 			}	
 		} else {
-			System.out.println("There're no students registered.");
+			System.out.println("There're no students registered.\n");
 		}
 	}
 	

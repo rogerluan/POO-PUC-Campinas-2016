@@ -52,15 +52,11 @@ public class Student {
 
 	@Override
 	public String toString() {
-		return "Student: " + getName() + ", RA = " + getRA();
-	}
-	
-	public String toFullString() {
-		String returnString = new String(getName().toUpperCase() + ", RA = " + getRA() + "\nCurrent Books: ");
+		String returnString = new String("Student: " + name + ", RA = " + RA + "\nCurrent Books: ");
 		
 		if (currentBooks.size() > 0) {
 			for (Book book : currentBooks) {
-				returnString = returnString + "\n - " + book.getTitle() + " - Due date: " + book.getFormattedReturnDateLimit();
+				returnString = returnString + "\n - " + book.getTitle();
 			}	
 		} else {
 			returnString = returnString + "none.";
@@ -99,7 +95,7 @@ public class Student {
 	 */
 	public Boolean returnBook(Book book) {
 		if (currentBooks.contains(book)) {
-			if (book.isOverdue()) {
+			if (new Date().after(book.getReturnDateLimit())) {
 				System.out.println(name.toUpperCase() + " is returning the book after the return date limit.");
 			}
 			currentBooks.remove(book);
