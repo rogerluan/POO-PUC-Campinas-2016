@@ -45,13 +45,4 @@ public class StudentManager {
 			System.out.println(student.toString());
 		}
 	}
-	
-	public Student getStudentByRA(String RA) {
-		for (Student student : students) {
-			if (student.getRA().equals(RA)) {
-				return student;
-			}
-		}
-		return null;
-	}
 }

@@ -53,7 +53,7 @@ public class BookManager {
 		return bookList;
 	}
 	
-	public Book chooseBookByTitle(String title, Scanner input) {
+	public Book chooseBookByTitle(String title) {
 		ArrayList<Book> possibleBooks = getBooksByTitle(title);
 		
 		Book choosenBook = null;
@@ -67,8 +67,9 @@ public class BookManager {
 				System.out.println("Type the index of the book that you want to see more detailed information, or any other key if you want to return to the main menu.");
 				
 				try {
-					input = new Scanner(System.in);
-					Integer option = input.nextInt();
+					Scanner input = new Scanner(System.in);
+					Integer option = Integer.parseInt(input.nextLine());
+					input.close();
 					if (option >= 1 && option <= possibleBooks.size()) {
 						choosenBook = possibleBooks.get(option-1);
 					}

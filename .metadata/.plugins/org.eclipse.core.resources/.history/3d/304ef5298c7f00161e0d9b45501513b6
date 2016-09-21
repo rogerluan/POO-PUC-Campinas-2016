@@ -46,8 +46,9 @@ public class LibrarySystem {
 	}
 	
 	private void readOption() {
+		input.close();
+		System.out.println("Action: ");
 		try {
-			System.out.println("Action: ");
 			input = new Scanner(System.in);
 			Integer intAction = input.nextInt();
 			if (intAction >= 1 && intAction <= Action.values().length) {
@@ -58,9 +59,9 @@ public class LibrarySystem {
 				readOption();
 			}
 		} catch (Exception e) {
-			System.out.println("Invalid action, please choose an action number between 1 and 9.");
-			readOption();
-		}		
+			System.out.println(e);
+		}
+		
 	}
 	
 	private void didChooseAction(Action action) {
@@ -165,7 +166,7 @@ public class LibrarySystem {
 			input = new Scanner(System.in);
 			System.out.println("Title of the book: ");
 			String title = input.nextLine();
-			Book choosenBook = bookManager.chooseBookByTitle(title, input); 
+			Book choosenBook = bookManager.chooseBookByTitle(title); 
 			if (choosenBook != null) {
 				System.out.println(choosenBook.toFullString());
 			} else {

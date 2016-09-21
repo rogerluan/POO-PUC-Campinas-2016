@@ -26,7 +26,7 @@ public class LibrarySystem {
 	}
 	
 	public void showWelcomeMessage() {
-		DateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
+		DateFormat formatter = new SimpleDateFormat("mmmm dd, yyyy");
 		System.out.println("Welcome to the Library System. Today is " + formatter.format(new Date()));
 	}
 	
@@ -46,9 +46,8 @@ public class LibrarySystem {
 	}
 	
 	private void readOption() {
-		try {
+		if (input != null) {
 			System.out.println("Action: ");
-			input = new Scanner(System.in);
 			Integer intAction = input.nextInt();
 			if (intAction >= 1 && intAction <= Action.values().length) {
 				Action action = Action.values()[intAction-1];
@@ -57,10 +56,10 @@ public class LibrarySystem {
 				System.out.println("Invalid action, please choose an action number between 1 and 9.");
 				readOption();
 			}
-		} catch (Exception e) {
-			System.out.println("Invalid action, please choose an action number between 1 and 9.");
+		} else {
+			input = new Scanner(System.in);
 			readOption();
-		}		
+		}
 	}
 	
 	private void didChooseAction(Action action) {
@@ -165,15 +164,25 @@ public class LibrarySystem {
 			input = new Scanner(System.in);
 			System.out.println("Title of the book: ");
 			String title = input.nextLine();
-			Book choosenBook = bookManager.chooseBookByTitle(title, input); 
-			if (choosenBook != null) {
-				System.out.println(choosenBook.toFullString());
-			} else {
-				if (bookManager.getBooksByTitle(title).size() > 0) {
-					System.out.println("Returning to the main menu.\n");
+			ArrayList<Book> possibleBooks = bookManager.getBooksByTitle(title);
+			
+			if (possibleBooks.size() > 0) {
+				if (possibleBooks.size() > 1) {
+					System.out.println("The search brought " + possibleBooks.size() + " results.");
+					for (Book book : possibleBooks) {
+						System.out.println("Book #" + (possibleBooks.indexOf(book)+1) + ": " + book.toString());
+					}
+					System.out.println("Type the index of the book that you want to see more detailed information, or any other key if you want to return to the main menu.");
+					Integer option = Integer.parseInt(input.nextLine()); //to-do: this needs more validation. Any string can be read here.
+					if (option >= 1 && option <= possibleBooks.size()) {
+						System.out.println(possibleBooks.get(option-1).toFullString());
+					}
 				} else {
-					System.out.println("No books could be found with the given title.");
+					System.out.println("The search brought 1 result.");
+					System.out.println("Book: " + possibleBooks.get(0).toFullString());
 				}
+			} else {
+				System.out.println("No books could be found with the given title.");
 			}
 		}
 		showMenu();

@@ -102,7 +102,7 @@ public class Book {
 	public String toFullString() {
 		return "Book title: " + title + 
 				"\nRegistered on: " + getFormattedRegisterDate() +
-				"\nLibrary owns: " + getTotalNumberOfCopies() + " copies" +
+				"\nLibrary owns: " + getTotalNumberOfCopies() + "copies" +
 				"\nBooks available: " + (getTotalNumberOfCopies()-getCopiesTaken()) + "\n";
 	}
 

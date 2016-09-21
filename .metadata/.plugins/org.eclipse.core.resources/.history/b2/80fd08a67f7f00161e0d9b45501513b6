@@ -111,12 +111,4 @@ public class Student {
 	public Integer getBookRentalCount() {
 		return currentBooks.size();
 	}
-	
-	public Boolean canBorrowBook() {
-		//to-do: verify if the student has any overdue book.
-		if (currentBooks.size() > 3) {
-			return false;
-		}
-		return true;
-	}
 }

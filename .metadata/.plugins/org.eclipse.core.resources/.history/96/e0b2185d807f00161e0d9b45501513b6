@@ -20,7 +20,6 @@ public class Book {
 		setRegisterDate(new Date());
 		setAllowedRentalPeriod(7);
 		setTotalNumberOfCopies(totalNumberOfCopies);
-		setCopiesTaken(0);
 	}
 
 	/*
@@ -100,10 +99,10 @@ public class Book {
 		return "" + totalNumberOfCopies + " x " + title + ", register date: " + getFormattedRegisterDate();
 	}
 	public String toFullString() {
-		return "Book title: " + title + 
-				"\nRegistered on: " + getFormattedRegisterDate() +
-				"\nLibrary owns: " + getTotalNumberOfCopies() + " copies" +
-				"\nBooks available: " + (getTotalNumberOfCopies()-getCopiesTaken()) + "\n";
+		return "\n" + title + 
+				"Registered on: " + getFormattedRegisterDate() +
+				"Library owns: " + getTotalNumberOfCopies() + "copies" +
+				"Books available: " + (getTotalNumberOfCopies()-getCopiesTaken());
 	}
 
 	/*

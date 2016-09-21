@@ -165,7 +165,7 @@ public class LibrarySystem {
 			input = new Scanner(System.in);
 			System.out.println("Title of the book: ");
 			String title = input.nextLine();
-			Book choosenBook = bookManager.chooseBookByTitle(title, input); 
+			Book choosenBook = bookManager.chooseBookByTitle(title); 
 			if (choosenBook != null) {
 				System.out.println(choosenBook.toFullString());
 			} else {

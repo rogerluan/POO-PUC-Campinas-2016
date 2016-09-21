@@ -1,6 +1,5 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -26,7 +25,7 @@ public class LibrarySystem {
 	}
 	
 	public void showWelcomeMessage() {
-		DateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
+		DateFormat formatter = new SimpleDateFormat("MMM dd yyyy");
 		System.out.println("Welcome to the Library System. Today is " + formatter.format(new Date()));
 	}
 	
@@ -46,9 +45,8 @@ public class LibrarySystem {
 	}
 	
 	private void readOption() {
-		try {
+		if (input != null) {
 			System.out.println("Action: ");
-			input = new Scanner(System.in);
 			Integer intAction = input.nextInt();
 			if (intAction >= 1 && intAction <= Action.values().length) {
 				Action action = Action.values()[intAction-1];
@@ -57,10 +55,10 @@ public class LibrarySystem {
 				System.out.println("Invalid action, please choose an action number between 1 and 9.");
 				readOption();
 			}
-		} catch (Exception e) {
-			System.out.println("Invalid action, please choose an action number between 1 and 9.");
+		} else {
+			input = new Scanner(System.in);
 			readOption();
-		}		
+		}
 	}
 	
 	private void didChooseAction(Action action) {
@@ -134,26 +132,7 @@ public class LibrarySystem {
 	}
 
 	private void actionLendBooks() {
-		if (studentManager != null && bookManager != null) {
-			input = new Scanner(System.in);
-			System.out.println("Type the RA of the student that wasnt to borrow books: ");
-			String requestingRA = input.nextLine();
-			
-			Student requestingStudent = studentManager.getStudentByRA(requestingRA);
-			if (requestingStudent != null) {
-				if (requestingStudent.canBorrowBook()) {
-					System.out.println("Title of the book to be borrowed: ");
-					String title = input.nextLine();
-					//call search function here
-				} else {
-					//if (requestingStudent.hasOverdueBooks) 
-					System.out.println("This student can't borrow any more books.");
-				}
-			} else {
-				System.out.println("We couldn't find a student with the given RA.");
-			}
-			
-		}
+		
 	}
 
 	private void actionReturnBooks() {
@@ -161,22 +140,7 @@ public class LibrarySystem {
 	}
 
 	private void actionSearchBookByTitle() {
-		if (bookManager != null) {
-			input = new Scanner(System.in);
-			System.out.println("Title of the book: ");
-			String title = input.nextLine();
-			Book choosenBook = bookManager.chooseBookByTitle(title, input); 
-			if (choosenBook != null) {
-				System.out.println(choosenBook.toFullString());
-			} else {
-				if (bookManager.getBooksByTitle(title).size() > 0) {
-					System.out.println("Returning to the main menu.\n");
-				} else {
-					System.out.println("No books could be found with the given title.");
-				}
-			}
-		}
-		showMenu();
+
 	}
 
 	private void actionSearchStudentByName() {

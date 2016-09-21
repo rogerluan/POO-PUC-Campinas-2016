@@ -20,7 +20,6 @@ public class Book {
 		setRegisterDate(new Date());
 		setAllowedRentalPeriod(7);
 		setTotalNumberOfCopies(totalNumberOfCopies);
-		setCopiesTaken(0);
 	}
 
 	/*
@@ -35,7 +34,7 @@ public class Book {
 	}
 	
 	public String getFormattedRegisterDate() {
-		DateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
+		DateFormat formatter = new SimpleDateFormat("mmmm dd, yyyy");
 		return formatter.format(registerDate);
 	}
 
@@ -44,7 +43,7 @@ public class Book {
 	}
 	
 	public String getFormattedRentalDate() {
-		DateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
+		DateFormat formatter = new SimpleDateFormat("mmmm dd, yyyy");
 		return formatter.format(rentalDate);
 	}
 
@@ -97,13 +96,13 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return "" + totalNumberOfCopies + " x " + title + ", register date: " + getFormattedRegisterDate();
+		return "" + totalNumberOfCopies + " x " + title + ", register date:  " + registerDate;
 	}
 	public String toFullString() {
-		return "Book title: " + title + 
-				"\nRegistered on: " + getFormattedRegisterDate() +
-				"\nLibrary owns: " + getTotalNumberOfCopies() + " copies" +
-				"\nBooks available: " + (getTotalNumberOfCopies()-getCopiesTaken()) + "\n";
+		return "\n" + title + 
+				"Registered on: " + getFormattedRegisterDate() +
+				"Library owns: " + getTotalNumberOfCopies() + "copies" +
+				"Books available: " + (getTotalNumberOfCopies()-getCopiesTaken());
 	}
 
 	/*

@@ -26,7 +26,7 @@ public class LibrarySystem {
 	}
 	
 	public void showWelcomeMessage() {
-		DateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
+		DateFormat formatter = new SimpleDateFormat("mmmm dd, yyyy");
 		System.out.println("Welcome to the Library System. Today is " + formatter.format(new Date()));
 	}
 	
@@ -46,10 +46,10 @@ public class LibrarySystem {
 	}
 	
 	private void readOption() {
+		System.out.println("Action: ");
 		try {
-			System.out.println("Action: ");
 			input = new Scanner(System.in);
-			Integer intAction = input.nextInt();
+			Integer intAction = Integer.parseInt(input.nextLine());
 			if (intAction >= 1 && intAction <= Action.values().length) {
 				Action action = Action.values()[intAction-1];
 				didChooseAction(action);	
@@ -58,9 +58,9 @@ public class LibrarySystem {
 				readOption();
 			}
 		} catch (Exception e) {
-			System.out.println("Invalid action, please choose an action number between 1 and 9.");
-			readOption();
-		}		
+			System.out.println(e);
+		}
+		
 	}
 	
 	private void didChooseAction(Action action) {
@@ -165,7 +165,7 @@ public class LibrarySystem {
 			input = new Scanner(System.in);
 			System.out.println("Title of the book: ");
 			String title = input.nextLine();
-			Book choosenBook = bookManager.chooseBookByTitle(title, input); 
+			Book choosenBook = bookManager.chooseBookByTitle(title); 
 			if (choosenBook != null) {
 				System.out.println(choosenBook.toFullString());
 			} else {
