@@ -78,12 +78,11 @@ public class Student {
 		if (currentBooks.size() >= 3) {
 			return false;
 		} else {
+			book.setRentalDateToNow();
 			book.incrementCopiesTaken();
-			Book bookBeingBorrowed = book.copy();
-			bookBeingBorrowed.borrow();
-			currentBooks.add(bookBeingBorrowed);
+			currentBooks.add(book);
 			
-			System.out.println(name.toUpperCase() + " must return this book by " + bookBeingBorrowed.getFormattedReturnDateLimit());
+			System.out.println(name.toUpperCase() + " must return this book by " + book.getFormattedReturnDateLimit());
 			return true;
 		}
 	}
@@ -95,13 +94,9 @@ public class Student {
 	 */
 	public Boolean returnBook(Book book) {
 		if (currentBooks.contains(book)) {
-			if (new Date().after(book.getReturnDateLimit())) {
-				System.out.println(name.toUpperCase() + " is returning the book after the return date limit.");
-			}
 			currentBooks.remove(book);
 			return true;
 		} else {
-			System.out.println("Error: the book choosen couldn't be found in the student's current books.");
 			return false;
 		}
 	}

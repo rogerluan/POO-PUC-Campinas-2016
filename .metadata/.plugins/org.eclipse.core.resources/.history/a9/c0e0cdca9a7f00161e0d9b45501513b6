@@ -27,7 +27,7 @@ public class BookManager {
 	public void addBook(Book newBook) {
 		for (Book book : books) {
 			if (book.getTitle().equals(newBook.getTitle())) {
-				book.setTotalNumberOfCopies(book.getTotalNumberOfCopies() + newBook.getTotalNumberOfCopies());
+				book.incrementTotalNumberOfCopies();
 				return;
 			}
 		}
@@ -45,7 +45,6 @@ public class BookManager {
 	}
 	
 	public ArrayList<Book> getBooksByTitle(String title) {
-		
 		ArrayList<Book> bookList = new ArrayList<Book>();
 		for (Book book : books) {
 			if (book.getTitle().contains(title)) {
@@ -53,15 +52,6 @@ public class BookManager {
 			}
 		}
 		return bookList;
-	}
-
-	public Book getBookByTitle(String title) {
-		for (Book book : books) {
-			if (book.getTitle().equals(title)) {
-				return book;
-			}
-		}
-		return null;
 	}
 	
 	public Book chooseBookByTitle(String title, Scanner input) {

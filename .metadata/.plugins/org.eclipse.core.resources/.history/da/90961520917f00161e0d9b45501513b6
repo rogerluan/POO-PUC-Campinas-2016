@@ -1,20 +1,16 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class Book {
 
-	private final DateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
-	
 	private String title;
 	private Date registerDate;
 	private Date rentalDate;
-	private Date returnDateLimit;
 	private Integer allowedRentalPeriod;
 	private Integer totalNumberOfCopies;
 	private Integer copiesTaken;
-	
+
 	/*
 	 * Constructor
 	 */
@@ -25,12 +21,6 @@ public class Book {
 		setAllowedRentalPeriod(7);
 		setTotalNumberOfCopies(totalNumberOfCopies);
 		setCopiesTaken(0);
-	}
-	
-	public Book copy() {
-		Book newBook = new Book(getTitle(), 1);
-		newBook.setCopiesTaken(1);
-		return newBook;
 	}
 
 	/*
@@ -45,6 +35,7 @@ public class Book {
 	}
 	
 	public String getFormattedRegisterDate() {
+		DateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
 		return formatter.format(registerDate);
 	}
 
@@ -53,15 +44,8 @@ public class Book {
 	}
 	
 	public String getFormattedRentalDate() {
+		DateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
 		return formatter.format(rentalDate);
-	}
-	
-	public Date getReturnDateLimit() {
-		return returnDateLimit;
-	}
-	
-	public String getFormattedReturnDateLimit() {
-		return formatter.format(returnDateLimit);
 	}
 
 	public Integer getAllowedRentalPeriod() {
@@ -94,10 +78,6 @@ public class Book {
 	public void setRentalDateToNow() {
 		this.rentalDate = new Date();
 	}
-	
-	public void setReturnDateLimit(Date returnDateLimit) {
-		this.returnDateLimit = returnDateLimit;
-	}
 
 	public void setAllowedRentalPeriod(Integer allowedRentalPeriod) {
 		if (allowedRentalPeriod > 0) {
@@ -107,7 +87,7 @@ public class Book {
 		}
 	}
 
-	public void setTotalNumberOfCopies(Integer totalNumberOfCopies) {
+	private void setTotalNumberOfCopies(Integer totalNumberOfCopies) {
 		this.totalNumberOfCopies = totalNumberOfCopies;
 	}
 	
@@ -123,35 +103,21 @@ public class Book {
 		return "Book title: " + title + 
 				"\nRegistered on: " + getFormattedRegisterDate() +
 				"\nLibrary owns: " + getTotalNumberOfCopies() + " copies" +
-				"\nBooks available: " + (countAvailableCopies()) + "\n";
+				"\nBooks available: " + (getTotalNumberOfCopies()-getCopiesTaken()) + "\n";
 	}
 
 	/*
 	 * Custom Methods
 	 */
+	public void incrementTotalNumberOfCopies() {
+		setTotalNumberOfCopies(getTotalNumberOfCopies() + 1);
+	}
+	
 	public void incrementCopiesTaken() {
 		setCopiesTaken(getCopiesTaken()+1);
 	}
 	
 	public void decrementCopiesTaken() {
 		setCopiesTaken(getCopiesTaken()-1);
-	}
-	
-	public Integer countAvailableCopies() {
-		return getTotalNumberOfCopies() - getCopiesTaken();
-	}
-	
-	/**
-	 * Method that should be called by a copy reference of the book that is being borrowed.
-	 */
-	public void borrow() {
-		setRentalDateToNow();
-		
-		// adds allowed rental period to the rental date so we have the return date
-		Calendar calendarHelper = Calendar.getInstance(); 
-		calendarHelper.setTime(getRentalDate()); 
-		calendarHelper.add(Calendar.DATE, getAllowedRentalPeriod());
-
-		setReturnDateLimit(calendarHelper.getTime());
 	}
 }

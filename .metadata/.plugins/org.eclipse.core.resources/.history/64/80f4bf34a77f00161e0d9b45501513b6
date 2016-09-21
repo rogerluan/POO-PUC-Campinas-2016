@@ -163,6 +163,7 @@ public class LibrarySystem {
 			} else {
 				System.out.println("We couldn't find a student with the given RA.");
 			}
+			
 		}
 		showMenu();
 	}
@@ -175,29 +176,34 @@ public class LibrarySystem {
 			
 			Student requestingStudent = studentManager.getStudentByRA(requestingRA);
 			if (requestingStudent != null) {
-				if (requestingStudent.getCurrentBooks().size() > 0) {
+				if (requestingStudent.canBorrowBook()) {
 					System.out.println("Title of the book that is being returned: ");
 					String title = input.nextLine();
 					Book returningBook = requestingStudent.chooseBookByTitle(title, input);
 					
-					if (returningBook != null) {
-						requestingStudent.returnBook(returningBook);
-						Book bookReference = bookManager.getBookByTitle(returningBook.getTitle());
-						if (bookReference != null) {
-							bookReference.decrementCopiesTaken();
-							System.out.println(requestingStudent.getName() + " successfully returned the book " + returningBook.getTitle());
+					requestingStudent.returnBook(returningBook);
+					Book bookReference = bookManager.getBookByTitle(returningBook.getTitle());
+					if (bookReference != null) {
+						bookReference.decrementCopiesTaken();
+					}
+					
+					if (returningBook.countAvailableCopies() > 0) {
+						if (requestingStudent.rentBook(choosenBook)) {
+							System.out.println("The book '" + choosenBook.getTitle() + "' was successfully lent to " + requestingStudent.getName());
 						} else {
-							System.out.println("Error: couldn't find a reference of the returning book in the Library.");
+							System.out.println("This student can't borrow any more books.");
 						}
 					} else {
-						System.out.println("Operation aborted, returning back to the main menu.\n");
+						System.out.println("There isn't a copy of this book available for borrow at the moment. Please try again later, or choose another book.");
 					}
 				} else {
-					System.out.println("This student doesn't have any books in loan.\n");
+					//TODO: if (requestingStudent.hasOverdueBooks) 
+					System.out.println("This student can't borrow any more books.");
 				}
 			} else {
-				System.out.println("We couldn't find a student with the given RA.\n");
-			}	
+				System.out.println("We couldn't find a student with the given RA.");
+			}
+			
 		}
 		showMenu();
 	}

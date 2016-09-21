@@ -163,6 +163,7 @@ public class LibrarySystem {
 			} else {
 				System.out.println("We couldn't find a student with the given RA.");
 			}
+			
 		}
 		showMenu();
 	}
@@ -185,7 +186,6 @@ public class LibrarySystem {
 						Book bookReference = bookManager.getBookByTitle(returningBook.getTitle());
 						if (bookReference != null) {
 							bookReference.decrementCopiesTaken();
-							System.out.println(requestingStudent.getName() + " successfully returned the book " + returningBook.getTitle());
 						} else {
 							System.out.println("Error: couldn't find a reference of the returning book in the Library.");
 						}

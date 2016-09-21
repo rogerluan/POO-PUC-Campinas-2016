@@ -44,7 +44,7 @@ public class BookManager {
 		}
 	}
 	
-	public ArrayList<Book> getBooksByTitle(String title) {
+	private ArrayList<Book> getBooksByTitle(String title) {
 		
 		ArrayList<Book> bookList = new ArrayList<Book>();
 		for (Book book : books) {

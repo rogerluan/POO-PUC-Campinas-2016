@@ -26,12 +26,6 @@ public class Book {
 		setTotalNumberOfCopies(totalNumberOfCopies);
 		setCopiesTaken(0);
 	}
-	
-	public Book copy() {
-		Book newBook = new Book(getTitle(), 1);
-		newBook.setCopiesTaken(1);
-		return newBook;
-	}
 
 	/*
 	 * Getters
@@ -93,6 +87,13 @@ public class Book {
 
 	public void setRentalDateToNow() {
 		this.rentalDate = new Date();
+		
+		// adds allowed rental period to the rental date so we have the return date
+		Calendar calendarHelper = Calendar.getInstance(); 
+		calendarHelper.setTime(getRentalDate()); 
+		calendarHelper.add(Calendar.DATE, getAllowedRentalPeriod());
+
+		setReturnDateLimit(calendarHelper.getTime());
 	}
 	
 	public void setReturnDateLimit(Date returnDateLimit) {
@@ -139,19 +140,5 @@ public class Book {
 	
 	public Integer countAvailableCopies() {
 		return getTotalNumberOfCopies() - getCopiesTaken();
-	}
-	
-	/**
-	 * Method that should be called by a copy reference of the book that is being borrowed.
-	 */
-	public void borrow() {
-		setRentalDateToNow();
-		
-		// adds allowed rental period to the rental date so we have the return date
-		Calendar calendarHelper = Calendar.getInstance(); 
-		calendarHelper.setTime(getRentalDate()); 
-		calendarHelper.add(Calendar.DATE, getAllowedRentalPeriod());
-
-		setReturnDateLimit(calendarHelper.getTime());
 	}
 }

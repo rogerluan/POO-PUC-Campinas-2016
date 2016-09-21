@@ -137,7 +137,7 @@ public class LibrarySystem {
 	private void actionLendBooks() {
 		if (studentManager != null && bookManager != null) {
 			input = new Scanner(System.in);
-			System.out.println("Type the RA of the student that wants to borrow books: ");
+			System.out.println("Type the RA of the student that wasnt to borrow books: ");
 			String requestingRA = input.nextLine();
 			
 			Student requestingStudent = studentManager.getStudentByRA(requestingRA);
@@ -163,43 +163,13 @@ public class LibrarySystem {
 			} else {
 				System.out.println("We couldn't find a student with the given RA.");
 			}
+			
 		}
 		showMenu();
 	}
 
 	private void actionReturnBooks() {
-		if (studentManager != null && bookManager != null) {
-			input = new Scanner(System.in);
-			System.out.println("Type the RA of the student that is returning the book: ");
-			String requestingRA = input.nextLine();
-			
-			Student requestingStudent = studentManager.getStudentByRA(requestingRA);
-			if (requestingStudent != null) {
-				if (requestingStudent.getCurrentBooks().size() > 0) {
-					System.out.println("Title of the book that is being returned: ");
-					String title = input.nextLine();
-					Book returningBook = requestingStudent.chooseBookByTitle(title, input);
-					
-					if (returningBook != null) {
-						requestingStudent.returnBook(returningBook);
-						Book bookReference = bookManager.getBookByTitle(returningBook.getTitle());
-						if (bookReference != null) {
-							bookReference.decrementCopiesTaken();
-							System.out.println(requestingStudent.getName() + " successfully returned the book " + returningBook.getTitle());
-						} else {
-							System.out.println("Error: couldn't find a reference of the returning book in the Library.");
-						}
-					} else {
-						System.out.println("Operation aborted, returning back to the main menu.\n");
-					}
-				} else {
-					System.out.println("This student doesn't have any books in loan.\n");
-				}
-			} else {
-				System.out.println("We couldn't find a student with the given RA.\n");
-			}	
-		}
-		showMenu();
+		
 	}
 
 	private void actionSearchBookByTitle() {
