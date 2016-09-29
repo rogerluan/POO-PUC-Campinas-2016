@@ -7,22 +7,36 @@ import java.util.Scanner;
 public class LibrarySystem {
 
 	private BookManager bookManager;
-	private StudentManager studentManager;
+	private PersonManager personManager;
+	private ArrayList<Loan> loans;
 	private Scanner input;
 	
 	public enum Action {
-		ActionRegisterNewStudent, ActionRegisterNewBook,
+		ActionRegisterNewPerson, ActionRegisterNewBook,
 		ActionLendBooks, ActionReturnBooks,
-		ActionSearchBookByTitle, ActionSearchStudentByName,
-		ActionListOverdue, ActionListBooks, ActionListStudents,
+		ActionSearchBookByTitle, ActionSearchPersonByName,
+		ActionListOverdue, ActionListBooks, ActionListPeople,
 		ActionQuit
+	}
+
+	public enum Role {
+		RoleUndergraduate, RolePostgraduate, RoleProfessor
 	}
 	
 	public LibrarySystem () {
 		bookManager = new BookManager();
-		studentManager = new StudentManager();
+		personManager = new PersonManager();
+		setLoans(new ArrayList<Loan>());
 		showWelcomeMessage();
 		showMenu();
+	}
+	
+	private ArrayList<Loan> getLoans() {
+		return loans;
+	}
+	
+	private void setLoans(ArrayList<Loan> loans) {
+		this.loans = loans;
 	}
 	
 	public void showWelcomeMessage() {
@@ -32,43 +46,59 @@ public class LibrarySystem {
 	
 	public void showMenu() {
 		System.out.println("Please choose an action below.");
-		System.out.println("1 - Register new student");
+		System.out.println("1 - Register new person");
 		System.out.println("2 - Register new book title");
 		System.out.println("3 - Lend books");
 		System.out.println("4 - Return books");
 		System.out.println("5 - Search book by title");
-		System.out.println("6 - Search student by name");
+		System.out.println("6 - Search person by name");
 		System.out.println("7 - List overdue books");
 		System.out.println("8 - List all books registered");
-		System.out.println("9 - List all students registered");
+		System.out.println("9 - List everyone registered");
 		System.out.println("10 - Quit");
-		readOption();
+		didChooseAction(readOption());
 	}
 	
-	private void readOption() {
+	private Action readOption() {
 		System.out.println("Action: ");
 		input = new Scanner(System.in);
 		Integer intAction = null;
 		try {
 			intAction = input.nextInt();
 		} catch (Exception e) {
-			System.out.println("Invalid action, please choose an action number between 1 and 9.");
-			readOption();
+			System.out.println("Invalid action, please choose an integer number between 1 and 10.");
+			return readOption();
 		}		
 		if (intAction >= 1 && intAction <= Action.values().length) {
-			Action action = Action.values()[intAction-1];
-			didChooseAction(action);	
+			return Action.values()[intAction-1];
 		} else {
-			System.out.println("Invalid action, please choose an action number between 1 and 9.");
-			readOption();
+			System.out.println("Invalid action, please choose an integer number between 1 and 10.");
+			return readOption();
+		}
+	}
+	
+	private Role readRole() {
+		System.out.println("Role: ");
+		input = new Scanner(System.in);
+		Integer intRole = null;
+		try {
+			intRole = input.nextInt();
+		} catch (Exception e) {
+			System.out.println("Invalid role, please choose a role number between 1 and 3.");
+			return readRole();
+		}		
+		if (intRole >= 1 && intRole <= Role.values().length) {
+			return Role.values()[intRole-1];
+		} else {
+			System.out.println("Invalid role, please choose a role number between 1 and 3.");
+			return readRole();
 		}
 	}
 	
 	private void didChooseAction(Action action) {
-		
 		switch (action) {
-		case ActionRegisterNewStudent:
-			actionRegisterNewStudent();
+		case ActionRegisterNewPerson:
+			actionRegisterNewPerson();
 			break;
 		case ActionRegisterNewBook:
 			actionRegisterNewBook();
@@ -82,8 +112,8 @@ public class LibrarySystem {
 		case ActionSearchBookByTitle:
 			actionSearchBookByTitle();
 			break;
-		case ActionSearchStudentByName:
-			actionSearchStudentByName();
+		case ActionSearchPersonByName:
+			actionSearchPersonByName();
 			break;
 		case ActionListOverdue:
 			actionListOverdue();
@@ -91,8 +121,8 @@ public class LibrarySystem {
 		case ActionListBooks:
 			actionListBooks();
 			break;
-		case ActionListStudents:
-			actionListStudents();
+		case ActionListPeople:
+			actionListPeople();
 			break;
 		case ActionQuit:
 			actionQuit();
@@ -103,20 +133,54 @@ public class LibrarySystem {
 	 * Actions
 	 */
 
-	private void actionRegisterNewStudent() {
-		if (studentManager != null) {
-			input = new Scanner(System.in);
-			System.out.println("Student name: ");
+	private void actionRegisterNewPerson() {
+		if (personManager == null) {
+			personManager = new PersonManager();
+		}		
+		System.out.println("Which role does this person belong to? \n1 - Undergraduate\n2 - Postgraduate\n3 - Professor");
+		Role role = readRole();
+		
+		Person newPerson = null;
+		
+		input = new Scanner(System.in);
+
+		switch (role) {
+		case RoleUndergraduate: {
+			System.out.println("Undergraduate name: ");
 			String name = input.nextLine();
-			System.out.println("Student RA: ");
+			System.out.println("Undergraduate RA: ");
 			String RA = input.nextLine();
-			
-			if (studentManager.addStudent(new Student(name, RA))) {
-				System.out.println(name.toUpperCase() + " was successfully registered.\n");
-			} else {
-				System.out.println("The given RA is already registered in our records.\n");
-			}
+			newPerson = new Undergraduate(name, RA);
+			break;
 		}
+		case RolePostgraduate: {
+			System.out.println("Postgraduate name: ");
+			String name = input.nextLine();
+			System.out.println("Postgraduate RA: ");
+			String RA = input.nextLine();
+			newPerson = new Postgraduate(name, RA);
+			break;
+		}
+		case RoleProfessor: {
+			System.out.println("Professor name: ");
+			String name = input.nextLine();
+			System.out.println("Professor ID: ");
+			String uid = input.nextLine();
+			newPerson = new Professor(name, uid);
+			break;
+		}
+		}
+		
+		if (newPerson != null) {
+		if (personManager.addPerson(newPerson)) {
+			System.out.println(newPerson.getName().toUpperCase() + " was successfully registered.\n");
+		} else {
+			System.out.println("The given person unique identifier is already registered in our records.\n");
+		}
+		} else {
+			System.out.println("An unknown error occurred: the role read couldn't be parsed.");
+		}
+	
 		showMenu();
 	}
 
@@ -128,74 +192,76 @@ public class LibrarySystem {
 			System.out.println("Number of copies: ");
 			Integer numberOfCopies = input.nextInt();
 			
-			bookManager.addBook(new LibraryBook(title, numberOfCopies));
+			bookManager.addBook(new Book(title, numberOfCopies));
 			System.out.println(title.toUpperCase() + " was successfully registered.\n");
 		}
 		showMenu();
 	}
 
 	private void actionLendBooks() {
-		if (studentManager != null && bookManager != null) {
-			if (studentManager.getStudents().size() > 0) {
+		if (personManager != null && bookManager != null) {
+			if (personManager.getPersons().size() > 0) {
 				if (bookManager.getBooks().size() > 0) {
 					input = new Scanner(System.in);
-					System.out.println("Type the RA of the student that wants to borrow books: ");
-					String requestingRA = input.nextLine();
+					System.out.println("Type the unique identifier of the person that wants to borrow books: ");
+					String requestingUid = input.nextLine();
 
-					Student requestingStudent = studentManager.getStudentByRA(requestingRA);
-					if (requestingStudent != null) {
-						if (requestingStudent.canBorrowBook()) {
+					Person requestingPerson = personManager.getPersonByUid(requestingUid);
+					if (requestingPerson != null) {
+						if (requestingPerson.canBorrowBook()) {
 							System.out.println("Title of the book to be borrowed: ");
 							String title = input.nextLine();
-							LibraryBook choosenBook = bookManager.chooseBookByTitle(title, input);
+							Book choosenBook = bookManager.chooseBookByTitle(title, input);
 							System.out.println(choosenBook.toFullString());
 							if (choosenBook.countAvailableCopies() > 0) {
-								if (requestingStudent.rentBook(choosenBook)) {
-									System.out.println("The book '" + choosenBook.getTitle() + "' was successfully lent to " + requestingStudent.getName());
+								Loan newLoan = new Loan(choosenBook, requestingPerson);
+								if (requestingPerson.startLoan(newLoan)) {
+									getLoans().add(newLoan);
+									System.out.println("The book '" + choosenBook.getTitle() + "' was successfully lent to " + requestingPerson.getName());
 								} else {
-									System.out.println("This student can't borrow any more books.");
+									System.out.println("This person can't borrow any more books.");
 								}
 							} else {
 								System.out.println("There isn't a copy of this book available for borrow at the moment. Please try again later, or choose another book.");
 							}
 						} else {
-							//TODO: if (requestingStudent.hasOverdueBooks) 
-							System.out.println("This student can't borrow any more books.");
+							//TODO: if (requestingPerson.hasOverdueBooks) 
+							System.out.println("This person can't borrow any more books.");
 						}
 					} else {
-						System.out.println("We couldn't find a student with the given RA.");
+						System.out.println("We couldn't find a person with the given unique identifier.");
 					}
 				} else {
 					System.out.println("No book records found.");
 				}
 			} else {
-				System.out.println("No student records found.");
+				System.out.println("No person records found.");
 			}
 		}
 		showMenu();
 	}
 
 	private void actionReturnBooks() {
-		if (studentManager != null && bookManager != null) {
-			if (studentManager.getStudents().size() > 0) {
+		if (personManager != null && bookManager != null) {
+			if (personManager.getPersons().size() > 0) {
 				if (bookManager.getBooks().size() > 0) {
 					input = new Scanner(System.in);
 					System.out.println("Type the RA of the student that is returning the book: ");
 					String requestingRA = input.nextLine();
 
-					Student requestingStudent = studentManager.getStudentByRA(requestingRA);
-					if (requestingStudent != null) {
-						if (requestingStudent.getCurrentBooks().size() > 0) {
+					Person requestingPerson = personManager.getPersonByUid(requestingRA);
+					if (requestingPerson != null) {
+						if (requestingPerson.getLoans().size() > 0) {
 							System.out.println("Title of the book that is being returned: ");
 							String title = input.nextLine();
-							StudentBook returningBook = requestingStudent.chooseBookByTitle(title, input);
-
-							if (returningBook != null) {
-								requestingStudent.returnBook(returningBook);
-								LibraryBook bookReference = bookManager.getBookByTitle(returningBook.getTitle());
+							Loan endingLoan = requestingPerson.chooseLoanByBookTitle(title, input);
+							if (endingLoan != null) {
+								Book bookReference = bookManager.getBookByTitle(endingLoan.getBook().getTitle());
 								if (bookReference != null) {
+									getLoans().remove(endingLoan);
+									requestingPerson.endLoan(endingLoan);
 									bookReference.decrementCopiesTakenCount();
-									System.out.println(requestingStudent.getName() + " successfully returned the book " + returningBook.getTitle());
+									System.out.println(requestingPerson.getName() + " successfully returned the book " + endingLoan.getBook().getTitle());
 								} else {
 									System.out.println("Error: couldn't find a reference of the returning book in the Library.");
 								}
@@ -224,7 +290,7 @@ public class LibrarySystem {
 				input = new Scanner(System.in);
 				System.out.println("Title of the book: ");
 				String title = input.nextLine();
-				LibraryBook choosenBook = bookManager.chooseBookByTitle(title, input); 
+				Book choosenBook = bookManager.chooseBookByTitle(title, input); 
 				if (choosenBook != null) {
 					System.out.println(choosenBook.toFullString());
 				} else {
@@ -241,42 +307,40 @@ public class LibrarySystem {
 		showMenu();
 	}
 
-	private void actionSearchStudentByName() {
-		if (studentManager != null) {
-			if (studentManager.getStudents().size() > 0) {
+	private void actionSearchPersonByName() {
+		if (personManager != null) {
+			if (personManager.getPersons().size() > 0) {
 				input = new Scanner(System.in);
-				System.out.println("Name of the student: ");
+				System.out.println("Name of the person: ");
 				String title = input.nextLine();
-				Student choosenStudent = studentManager.chooseStudentByName(title, input); 
-				if (choosenStudent != null) {
-					System.out.println(choosenStudent.toFullString());
+				Person choosenPerson = personManager.choosePersonByName(title, input); 
+				if (choosenPerson != null) {
+					System.out.println(choosenPerson.toFullString());
 				} else {
-					if (studentManager.getStudentsByName(title).size() > 0) { //means the chooseStudentByName method returned nil due to invalid command
+					if (personManager.getPersonsByName(title).size() > 0) { //means the choosePersonByName method returned nil due to invalid command
 						System.out.println("Returning to the main menu.\n");
 					} else {
-						System.out.println("No students could be found with the given title.");
+						System.out.println("No one could be found with the given title.");
 					}
 				}
 			} else {
-				System.out.println("No student records found.");
+				System.out.println("No person records found.");
 			}
 		}
 		showMenu();
 	}
 
 	private void actionListOverdue() {
-		
 		String noOverdueBooksMessage = "There're no overdue books.\n";
-		
-		if (bookManager != null && studentManager != null) {
-			ArrayList<Student> studentsList = studentManager.getStudents();
-			if (studentsList.size() > 0) {
-				for (Student student : studentsList) {
-					ArrayList<StudentBook> booksList = student.getCurrentBooks();
-					for (StudentBook book : booksList) {
-						if (book.isOverdue()) {
+		if (bookManager != null && personManager != null) {
+			ArrayList<Person> peopleList = personManager.getPersons();
+			if (peopleList.size() > 0) {
+				for (Person person : peopleList) {
+					ArrayList<Loan> loanList = person.getLoans();
+					for (Loan loan : loanList) {
+						if (loan.isOverdue()) {
 							noOverdueBooksMessage = "";
-							System.out.println(student.getName().toUpperCase() + " has over due books: \n -> " + book.getTitle() + ", Due date: " + book.getFormattedDueDate());
+							System.out.println(person.getName().toUpperCase() + " has over due books: \n -> " + loan.getBook().getTitle() + ", Due date: " + loan.getFormattedDueDate());
 						}
 					}
 				}
@@ -296,9 +360,9 @@ public class LibrarySystem {
 		showMenu();
 	}
 	
-	private void actionListStudents() {
-		if (studentManager != null) {
-			studentManager.listAllStudents();
+	private void actionListPeople() {
+		if (personManager != null) {
+			personManager.listEveryone();
 			System.out.println();
 		}
 		showMenu();
@@ -308,6 +372,7 @@ public class LibrarySystem {
 		System.out.println("Exiting program...");
 		input.close();
 		bookManager = null;
-		studentManager = null;
+		personManager = null;
+		loans = null;
 	}
 }

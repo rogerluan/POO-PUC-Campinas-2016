@@ -3,16 +3,15 @@ import java.util.Scanner;
 
 public class BookManager {
 
-	private ArrayList<LibraryBook> books;
+	private ArrayList<Book> books;
 	
 	public BookManager() {
-		super();
-		books = new ArrayList<LibraryBook>();
+		books = new ArrayList<Book>();
 	}
-	public ArrayList<LibraryBook> getBooks() {
+	public ArrayList<Book> getBooks() {
 		return books;
 	}
-	public void setBooks(ArrayList<LibraryBook> books) {
+	public void setBooks(ArrayList<Book> books) {
 		this.books = books;
 	}
 	
@@ -24,8 +23,8 @@ public class BookManager {
 	 * Registers a new book to the system.
 	 * @param newBook	The new book that's being added to the system.
 	 */
-	public void addBook(LibraryBook newBook) {
-		for (LibraryBook book : books) {
+	public void addBook(Book newBook) {
+		for (Book book : books) {
 			if (book.getTitle().equals(newBook.getTitle())) {
 				book.setCopiesCount(book.getCopiesCount() + newBook.getCopiesCount());
 				return;
@@ -36,7 +35,7 @@ public class BookManager {
 	
 	public void listAllBooks() {
 		if (books.size() > 0) {
-			for (LibraryBook book : books) {
+			for (Book book : books) {
 				System.out.println(book.toString());
 			}
 		} else {
@@ -44,10 +43,9 @@ public class BookManager {
 		}
 	}
 	
-	public ArrayList<LibraryBook> getBooksByTitle(String title) {
-		
-		ArrayList<LibraryBook> bookList = new ArrayList<LibraryBook>();
-		for (LibraryBook book : books) {
+	public ArrayList<Book> getBooksByTitle(String title) {
+		ArrayList<Book> bookList = new ArrayList<Book>();
+		for (Book book : books) {
 			if (book.getTitle().contains(title)) {
 				bookList.add(book);
 			}
@@ -55,8 +53,8 @@ public class BookManager {
 		return bookList;
 	}
 
-	public LibraryBook getBookByTitle(String title) {
-		for (LibraryBook book : books) {
+	public Book getBookByTitle(String title) {
+		for (Book book : books) {
 			if (book.getTitle().equals(title)) {
 				return book;
 			}
@@ -64,15 +62,15 @@ public class BookManager {
 		return null;
 	}
 	
-	public LibraryBook chooseBookByTitle(String title, Scanner input) {
-		ArrayList<LibraryBook> possibleBooks = getBooksByTitle(title);
+	public Book chooseBookByTitle(String title, Scanner input) {
+		ArrayList<Book> possibleBooks = getBooksByTitle(title);
 		
-		LibraryBook choosenBook = null;
+		Book choosenBook = null;
 		
 		if (possibleBooks.size() > 0) {
 			if (possibleBooks.size() > 1) {
 				System.out.println("The search brought " + possibleBooks.size() + " results.");
-				for (LibraryBook book : possibleBooks) {
+				for (Book book : possibleBooks) {
 					System.out.println("Book #" + (possibleBooks.indexOf(book)+1) + ": " + book.toString());
 				}
 				System.out.println("Type the index of the book that you want to see more detailed information, or any other key if you want to return to the main menu.");

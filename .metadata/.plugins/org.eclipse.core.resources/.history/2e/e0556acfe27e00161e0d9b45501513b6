@@ -1,6 +1,0 @@
-import java.util.ArrayList;
-
-public interface StudentManager {
-	private ArrayList<Student> students;
-	private 
-}
