@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class LibrarySystem {
 		System.out.println("Welcome to the Library System. Today is " + formatter.format(new Date()));
 	}
 	
-	public void showMenu() {
+	public void showMenu() {		
 		System.out.println("Please choose an action below.");
 		System.out.println("1 - Register new person");
 		System.out.println("2 - Register new book title");

@@ -28,3 +28,4 @@
 2016-09-28 22:26:15.677 xcodebuild[1025:19354] [MT] PluginLoading: Required plug-in compatibility UUID 8A66E736-A720-4B3C-92F1-33D9962C69DF for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin' not present in DVTPlugInCompatibilityUUIDs
 2016-09-28 22:26:15.679 xcodebuild[1025:19354] [MT] PluginLoading: Required plug-in compatibility UUID 8A66E736-A720-4B3C-92F1-33D9962C69DF for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/ActivatePowerMode.xcplugin' not present in DVTPlugInCompatibilityUUIDs
 
+2016-09-29 11:11:23,486 [Worker-4] INFO  c.g.t.t.d.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
