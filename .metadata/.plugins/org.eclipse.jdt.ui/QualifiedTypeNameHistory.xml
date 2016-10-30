@@ -10,7 +10,6 @@
 <fullyQualifiedTypeName name="LibrarySystem"/>
 <fullyQualifiedTypeName name="java.lang.SuppressWarnings"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
-<fullyQualifiedTypeName name="java.util.Scanner"/>
 <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
 <fullyQualifiedTypeName name="java.sql.Date"/>
 <fullyQualifiedTypeName name="java.util.Date"/>
@@ -19,4 +18,9 @@
 <fullyQualifiedTypeName name="Book"/>
 <fullyQualifiedTypeName name="Undergraduate"/>
 <fullyQualifiedTypeName name="Loan"/>
+<fullyQualifiedTypeName name="java.util.Scanner"/>
+<fullyQualifiedTypeName name="BookNotFoundException"/>
+<fullyQualifiedTypeName name="org.w3c.dom.ranges.RangeException"/>
+<fullyQualifiedTypeName name="LoanNotFoundException"/>
+<fullyQualifiedTypeName name="PersonNotFoundException"/>
 </qualifiedTypeNameHistroy>

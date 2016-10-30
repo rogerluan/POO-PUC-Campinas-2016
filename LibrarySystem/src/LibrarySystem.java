@@ -62,38 +62,14 @@ public class LibrarySystem {
 	
 	private Action readOption() {
 		System.out.println("Action: ");
-		input = new Scanner(System.in);
-		Integer intAction = null;
-		try {
-			intAction = input.nextInt();
-		} catch (Exception e) {
-			System.out.println("Invalid action, please choose an integer number between 1 and 10.");
-			return readOption();
-		}		
-		if (intAction >= 1 && intAction <= Action.values().length) {
-			return Action.values()[intAction-1];
-		} else {
-			System.out.println("Invalid action, please choose an integer number between 1 and 10.");
-			return readOption();
-		}
+		Integer intAction = ManagerHelper.chooseIndex(input, Action.values().length);
+		return Action.values()[intAction-1];
 	}
 	
 	private Role readRole() {
 		System.out.println("Role: ");
-		input = new Scanner(System.in);
-		Integer intRole = null;
-		try {
-			intRole = input.nextInt();
-		} catch (Exception e) {
-			System.out.println("Invalid role, please choose a role number between 1 and 3.");
-			return readRole();
-		}		
-		if (intRole >= 1 && intRole <= Role.values().length) {
-			return Role.values()[intRole-1];
-		} else {
-			System.out.println("Invalid role, please choose a role number between 1 and 3.");
-			return readRole();
-		}
+		Integer intRole = ManagerHelper.chooseIndex(input, Role.values().length);
+		return Role.values()[intRole-1];
 	}
 	
 	private void didChooseAction(Action action) {
@@ -173,13 +149,14 @@ public class LibrarySystem {
 		}
 		
 		if (newPerson != null) {
-		if (personManager.addPerson(newPerson)) {
-			System.out.println(newPerson.getName().toUpperCase() + " was successfully registered.\n");
+			try {
+				personManager.addPerson(newPerson);
+				System.out.println(newPerson.getName().toUpperCase() + " was successfully registered.\n");
+			} catch (PersonException e) {
+				System.err.println(e.getMessage());
+			}
 		} else {
-			System.out.println("The given person unique identifier is already registered in our records.\n");
-		}
-		} else {
-			System.out.println("An unknown error occurred: the role read couldn't be parsed.");
+			System.err.println("An unknown error occurred: the role read could not be parsed.");
 		}
 	
 		showMenu();
@@ -200,86 +177,71 @@ public class LibrarySystem {
 	}
 
 	private void actionLendBooks() {
-		if (personManager != null && bookManager != null) {
+		if (personManager != null || bookManager != null) {
 			if (personManager.getPersons().size() > 0) {
 				if (bookManager.getBooks().size() > 0) {
 					input = new Scanner(System.in);
 					System.out.println("Type the unique identifier of the person that wants to borrow books: ");
-					String requestingUid = input.nextLine();
-
-					Person requestingPerson = personManager.getPersonByUid(requestingUid);
-					if (requestingPerson != null) {
-						if (requestingPerson.canBorrowBook()) {
-							System.out.println("Title of the book to be borrowed: ");
-							String title = input.nextLine();
-							Book choosenBook = bookManager.chooseBookByTitle(title, input);
-							System.out.println(choosenBook.toFullString());
-							if (choosenBook.countAvailableCopies() > 0) {
-								Loan newLoan = new Loan(choosenBook, requestingPerson);
-								if (requestingPerson.startLoan(newLoan)) {
-									getLoans().add(newLoan);
-									System.out.println("The book '" + choosenBook.getTitle() + "' was successfully lent to " + requestingPerson.getName());
-								} else {
-									System.out.println("This person can't borrow any more books.");
-								}
+					Person requestingPerson = requestPersonByUid(input);
+					if (requestingPerson.canBorrowBook()) {
+						System.out.println("Title of the book to be borrowed: ");
+						Book choosenBook = requestBook(input);
+						System.out.println(choosenBook.toFullString());
+						if (choosenBook.countAvailableCopies() > 0) {
+							Loan newLoan = new Loan(choosenBook, requestingPerson);
+							if (requestingPerson.startLoan(newLoan)) {
+								getLoans().add(newLoan);
+								System.out.println("The book '" + choosenBook.getTitle() + "' was successfully lent to " + requestingPerson.getName());
 							} else {
-								System.out.println("There isn't a copy of this book available for borrow at the moment. Please try again later, or choose another book.");
+								System.err.println("This person can't borrow any more books.");
 							}
 						} else {
-							//TODO: if (requestingPerson.hasOverdueBooks) 
-							System.out.println("This person can't borrow any more books.");
+							System.err.println("There isn't a copy of this book available for borrow at the moment. Please try again later.");
 						}
 					} else {
-						System.out.println("We couldn't find a person with the given unique identifier.");
+						//TODO: if (requestingPerson.hasOverdueBooks) 
+						System.err.println("This person can't borrow any more books.");
 					}
+
 				} else {
-					System.out.println("No book records found.");
+					System.err.println("No book records found.");
 				}
 			} else {
-				System.out.println("No person records found.");
+				System.err.println("No person records found.");
 			}
 		}
 		showMenu();
 	}
 
 	private void actionReturnBooks() {
-		if (personManager != null && bookManager != null) {
+		if (personManager != null || bookManager != null) {
 			if (personManager.getPersons().size() > 0) {
 				if (bookManager.getBooks().size() > 0) {
-					input = new Scanner(System.in);
-					System.out.println("Type the RA of the student that is returning the book: ");
-					String requestingRA = input.nextLine();
-
-					Person requestingPerson = personManager.getPersonByUid(requestingRA);
-					if (requestingPerson != null) {
-						if (requestingPerson.getLoans().size() > 0) {
-							System.out.println("Title of the book that is being returned: ");
-							String title = input.nextLine();
+					System.out.println("Type the unique identifier of the person that is returning the book: ");
+					Person requestingPerson = requestPersonByUid(input);
+					if (requestingPerson.getLoans().size() > 0) {
+						System.out.println("Title of the book that is being returned: ");
+						String title = input.nextLine();
+						try {
 							Loan endingLoan = requestingPerson.chooseLoanByBookTitle(title, input);
-							if (endingLoan != null) {
-								Book bookReference = bookManager.getBookByTitle(endingLoan.getBook().getTitle());
-								if (bookReference != null) {
-									getLoans().remove(endingLoan);
-									requestingPerson.endLoan(endingLoan);
-									bookReference.decrementCopiesTakenCount();
-									System.out.println(requestingPerson.getName() + " successfully returned the book " + endingLoan.getBook().getTitle());
-								} else {
-									System.out.println("Error: couldn't find a reference of the returning book in the Library.");
-								}
-							} else {
-								System.out.println("Operation aborted, returning back to the main menu.\n");
-							}
-						} else {
-							System.out.println("This student doesn't have any books in loan.\n");
+							getLoans().remove(endingLoan);
+							requestingPerson.endLoan(endingLoan);
+							endingLoan.getBook().decrementCopiesTakenCount();
+							System.out.println(requestingPerson.getName() + " successfully returned the book " + endingLoan.getBook().getTitle());
+						} catch (LoanNotFoundException e) {
+							System.err.println(e.getMessage());
+						} catch (Exception e) {
+							System.err.println(e.getMessage());
+							e.printStackTrace();
 						}
 					} else {
-						System.out.println("We couldn't find a student with the given RA.\n");
+						System.err.println("This person doesn't have any books in loan.\n");
 					}
 				} else {
-					System.out.println("No book records found.");
+					System.err.println("No book records found.");
 				}
 			} else {
-				System.out.println("No student records found.");
+				System.err.println("No student records found.");
 			}
 		}
 		showMenu();
@@ -288,19 +250,9 @@ public class LibrarySystem {
 	private void actionSearchBookByTitle() {
 		if (bookManager != null) {
 			if (bookManager.getBooks().size() > 0) {
-				input = new Scanner(System.in);
 				System.out.println("Title of the book: ");
-				String title = input.nextLine();
-				Book choosenBook = bookManager.chooseBookByTitle(title, input); 
-				if (choosenBook != null) {
-					System.out.println(choosenBook.toFullString());
-				} else {
-					if (bookManager.getBooksByTitle(title).size() > 0) {
-						System.out.println("Returning to the main menu.\n");
-					} else {
-						System.out.println("No books could be found with the given title.");
-					}
-				}
+				Book choosenBook = requestBook(input); 
+				System.out.println(choosenBook.toFullString());
 			} else {
 				System.out.println("No book records found.");
 			}
@@ -311,19 +263,9 @@ public class LibrarySystem {
 	private void actionSearchPersonByName() {
 		if (personManager != null) {
 			if (personManager.getPersons().size() > 0) {
-				input = new Scanner(System.in);
 				System.out.println("Name of the person: ");
-				String title = input.nextLine();
-				Person choosenPerson = personManager.choosePersonByName(title, input); 
-				if (choosenPerson != null) {
-					System.out.println(choosenPerson.toFullString());
-				} else {
-					if (personManager.getPersonsByName(title).size() > 0) { //means the choosePersonByName method returned nil due to invalid command
-						System.out.println("Returning to the main menu.\n");
-					} else {
-						System.out.println("No one could be found with the given title.");
-					}
-				}
+				Person choosenPerson = requestPersonByName(input);
+				System.out.println(choosenPerson.toFullString());
 			} else {
 				System.out.println("No person records found.");
 			}
@@ -355,7 +297,11 @@ public class LibrarySystem {
 
 	private void actionListBooks() {
 		if (bookManager != null) {
-			bookManager.listAllBooks();
+			try {
+				bookManager.listAllBooks();
+			} catch (BookNotFoundException e) {
+				System.err.println(e.getMessage());
+			}
 			System.out.println();
 		}
 		showMenu();
@@ -363,7 +309,11 @@ public class LibrarySystem {
 	
 	private void actionListPeople() {
 		if (personManager != null) {
-			personManager.listEveryone();
+			try {
+				personManager.listEveryone();
+			} catch (PersonNotFoundException e) {
+				System.err.println(e.getMessage());
+			}
 			System.out.println();
 		}
 		showMenu();
@@ -375,5 +325,44 @@ public class LibrarySystem {
 		bookManager = null;
 		personManager = null;
 		loans = null;
+	}
+	
+	/**
+	 * Helpers
+	 */
+	@SuppressWarnings("resource")
+	private Person requestPersonByUid(Scanner input) {
+		input = new Scanner(System.in);
+		try {
+			String uid = input.nextLine();
+			return personManager.getPersonByUid(uid);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+			System.out.println("Please try again.\nUnique Identifier: ");
+			return requestPersonByUid(input);
+		}
+	}
+	
+	private Person requestPersonByName(Scanner input) {
+		input = new Scanner(System.in);
+		try {
+			String name = input.nextLine();
+			return personManager.choosePersonByName(name, input);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+			System.out.println("Please try again.\nName: ");
+			return requestPersonByName(input);
+		}
+	}
+
+	private Book requestBook(Scanner input) {
+		input = new Scanner(System.in);
+		try {
+			String title = input.nextLine();
+			return bookManager.chooseBookByTitle(title, input);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+			return requestBook(input);
+		}
 	}
 }

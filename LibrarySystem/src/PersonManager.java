@@ -25,32 +25,35 @@ public class PersonManager {
 	 * @param newPerson	The new person that's being added to the system.
 	 * @return 				True if the operation was successful, else false.
 	 */
-	public Boolean addPerson(Person newPerson) {
+	public void addPerson(Person newPerson) throws PersonException{
 		for (Person person : persons) {
 			if (person.getUid().equals(newPerson.getUid())) {
-				return false;
+				throw new PersonException("This " + person.getClass().getName() + " is already registered in our records.\n");
 			}
 		}
-		return persons.add(newPerson);
+		persons.add(newPerson);
 	}	
 	
-	public void listEveryone() {
+	public void listEveryone() throws PersonNotFoundException {
 		if (persons.size() > 0) {
 			for (Person person : persons) {
 				System.out.println(person.toString());
 			}	
 		} else {
-			System.out.println("There're no persons registered.");
+			throw new PersonNotFoundException("There's nobody registered in the database.");
 		}
 	}
 	
-	public Person getPersonByUid(String uid) {
+	public Person getPersonByUid(String uid) throws PersonNotFoundException {
+		if (persons.size() == 0) {
+			throw new PersonNotFoundException("There's nobody registered in the database.");
+		}
 		for (Person person : persons) {
 			if (person.getUid().equals(uid)) {
 				return person;
 			}
 		}
-		return null;
+		throw new PersonNotFoundException("There's nobody registered with the given unique identifier.");
 	}
 
 	/*//Currently not in use.
@@ -63,43 +66,32 @@ public class PersonManager {
 		return null;
 	}*/
 	
-	public Person choosePersonByName(String name, Scanner input) {
+	public Person choosePersonByName(String name, Scanner input) throws PersonNotFoundException {
 		ArrayList<Person> possiblePersons = getPersonsByName(name);
 		
-		Person choosenPerson = null;
-		
-		if (possiblePersons.size() > 0) {
-			if (possiblePersons.size() > 1) {
-				System.out.println("The search brought " + possiblePersons.size() + " results.");
-				for (Person person : possiblePersons) {
-					System.out.println("Person #" + (possiblePersons.indexOf(person)+1) + ": " + person.toString());
-				}
-				System.out.println("Type the index of the person that you want to see more detailed information, or any other key if you want to return to the main menu.");
-				
-				try {
-					input = new Scanner(System.in);
-					Integer option = input.nextInt();
-					if (option >= 1 && option <= possiblePersons.size()) {
-						choosenPerson = possiblePersons.get(option-1);
-					}
-				} catch (Exception e) {
-					//do nothing, just let the program continue to the main menu
-					return null;
-				}
-			} else {
-				System.out.println("The search brought 1 result.");
-				choosenPerson = possiblePersons.get(0);
+		if (possiblePersons.size() > 1) {
+			System.out.println("The search brought " + possiblePersons.size() + " results.");
+			for (Person person : possiblePersons) {
+				System.out.println("Person #" + (possiblePersons.indexOf(person)+1) + ": " + person.toString());
 			}
+			System.out.println("Type the index of the person that you want to see more detailed information, or any other key if you want to return to the main menu.");
+			Integer option = ManagerHelper.chooseIndex(input, possiblePersons.size());
+			return possiblePersons.get(option-1);
+		} else {
+			System.out.println("The search brought 1 result.");
+			return possiblePersons.get(0);
 		}
-		return choosenPerson;
 	}
 
-	public ArrayList<Person> getPersonsByName(String name) {
+	public ArrayList<Person> getPersonsByName(String name) throws PersonNotFoundException {
 		ArrayList<Person> personList = new ArrayList<Person>();
 		for (Person person : persons) {
 			if (person.getName().contains(name)) {
 				personList.add(person);
 			}
+		}
+		if (personList.size() == 0) {
+			throw new PersonNotFoundException("There's nobody with the given name.");
 		}
 		return personList;
 	}

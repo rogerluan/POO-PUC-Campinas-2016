@@ -23,7 +23,7 @@ public class Postgraduate extends Person {
 	}
 	
 	public String toFullString() {
-		String returnString = new String(getName().toUpperCase() + ", Student Register = " + getUid() + "\nCurrent Books: ");
+		String returnString = new String(getName().toUpperCase() + ", Postgraduate Register = " + getUid() + "\nCurrent Books: ");
 		
 		if (loans.size() > 0) {
 			for (Loan loan : loans) {

@@ -101,7 +101,7 @@ public abstract class Person {
 			loans.remove(loan);
 			return true;
 		} else {
-			System.out.println("Error: the book choosen couldn't be found in the student's current books.");
+			System.out.println("Error: the choosen book couldn't be found in the person's current books.");
 			return false;
 		}
 	}
@@ -116,10 +116,8 @@ public abstract class Person {
 		return loanList;
 	}
 	
-	public Loan chooseLoanByBookTitle(String title, Scanner input) {
-		
+	public Loan chooseLoanByBookTitle(String title, Scanner input) throws LoanNotFoundException {
 		ArrayList<Loan> possibleLoans = getLoansByBookTitle(title);
-		Loan choosenLoan = null;
 		
 		if (possibleLoans.size() > 0) {
 			if (possibleLoans.size() > 1) {
@@ -127,23 +125,15 @@ public abstract class Person {
 				for (Loan loan : possibleLoans) {
 					System.out.println("Book #" + (possibleLoans.indexOf(loan)+1) + ": " + loan.getBook().toString());
 				}
-				System.out.println("Type the index of the book that you want to return, or any other key if you want to return to the main menu.");
-				try {
-					input = new Scanner(System.in);
-					Integer option = input.nextInt();
-					if (option >= 1 && option <= possibleLoans.size()) {
-						choosenLoan = possibleLoans.get(option-1);
-					}
-				} catch (Exception e) {
-					//do nothing, just let the program continue to the main menu
-					return null;
-				}
+				System.out.println("Type the index of the book that you want to return.");
+				Integer option = ManagerHelper.chooseIndex(input, possibleLoans.size());
+				return possibleLoans.get(option-1);
 			} else {
 				System.out.println("The search brought 1 result.");
-				choosenLoan = possibleLoans.get(0);
+				return possibleLoans.get(0);
 			}
 		}
-		return choosenLoan;
+		throw new LoanNotFoundException("There are no loans that match this person and the given book title.");
 	}
 	
 	public Integer getLoanCount() {

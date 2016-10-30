@@ -33,63 +33,52 @@ public class BookManager {
 		books.add(newBook);
 	}	
 	
-	public void listAllBooks() {
+	public void listAllBooks() throws BookNotFoundException {
 		if (books.size() > 0) {
 			for (Book book : books) {
 				System.out.println(book.toString());
 			}
 		} else {
-			System.out.println("There're no books registered.");
+			throw new BookNotFoundException("There're no books registered.");
 		}
 	}
 	
-	public ArrayList<Book> getBooksByTitle(String title) {
+	public ArrayList<Book> getBooksByTitle(String title) throws BookNotFoundException {
 		ArrayList<Book> bookList = new ArrayList<Book>();
 		for (Book book : books) {
 			if (book.getTitle().contains(title)) {
 				bookList.add(book);
 			}
 		}
+		if (bookList.size() == 0) {
+			throw new BookNotFoundException("No books found with the given title.");
+		}
 		return bookList;
 	}
 
-	public Book getBookByTitle(String title) {
+	public Book getBookByTitle(String title) throws BookNotFoundException{
 		for (Book book : books) {
 			if (book.getTitle().equals(title)) {
 				return book;
 			}
 		}
-		return null;
+		throw new BookNotFoundException("No books found with the given title.");
 	}
 	
-	public Book chooseBookByTitle(String title, Scanner input) {
+	public Book chooseBookByTitle(String title, Scanner input) throws BookNotFoundException {
 		ArrayList<Book> possibleBooks = getBooksByTitle(title);
-		
-		Book choosenBook = null;
-		
-		if (possibleBooks.size() > 0) {
-			if (possibleBooks.size() > 1) {
-				System.out.println("The search brought " + possibleBooks.size() + " results.");
-				for (Book book : possibleBooks) {
-					System.out.println("Book #" + (possibleBooks.indexOf(book)+1) + ": " + book.toString());
-				}
-				System.out.println("Type the index of the book that you want to see more detailed information, or any other key if you want to return to the main menu.");
-				
-				try {
-					input = new Scanner(System.in);
-					Integer option = input.nextInt();
-					if (option >= 1 && option <= possibleBooks.size()) {
-						choosenBook = possibleBooks.get(option-1);
-					}
-				} catch (Exception e) {
-					//do nothing, just let the program continue to the main menu
-					return null;
-				}
-			} else {
-				System.out.println("The search brought 1 result.");
-				choosenBook = possibleBooks.get(0);
+
+		if (possibleBooks.size() > 1) {
+			System.out.println("The search brought " + possibleBooks.size() + " results.");
+			for (Book book : possibleBooks) {
+				System.out.println("Book #" + (possibleBooks.indexOf(book)+1) + ": " + book.toString());
 			}
+			System.out.println("Type the index of the book that you want to see more detailed information.");
+			Integer option = ManagerHelper.chooseIndex(input, possibleBooks.size());
+			return possibleBooks.get(option-1);
+		} else {
+			System.out.println("The search brought 1 result.");
+			return possibleBooks.get(0);
 		}
-		return choosenBook;
 	}
 }
